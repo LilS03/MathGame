@@ -13,8 +13,9 @@ import com.example.mathgame.domain.entity.GameResult
 class GameFinishedFragment : Fragment() {
     private lateinit var gameResult: GameResult
     private var _binding: FragmentGameFinishedBinding? = null
-    private val binding : FragmentGameFinishedBinding
+    private val binding: FragmentGameFinishedBinding
         get() = _binding ?: throw RuntimeException("FragmentGameFinishedBinding is null")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,34 +23,45 @@ class GameFinishedFragment : Fragment() {
         _binding = FragmentGameFinishedBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                retryGame()
-            }
-        })
-        binding.buttonRetry.setOnClickListener{
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    retryGame()
+                }
+            })
+        binding.buttonRetry.setOnClickListener {
             retryGame()
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseArgs()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    private fun parseArgs(){
+
+    private fun parseArgs() {
         gameResult = requireArguments().getSerializable(KEY_GAME_RESULT) as GameResult
     }
-    private fun retryGame(){
-        requireActivity().supportFragmentManager.popBackStack(GameFragment.NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+    private fun retryGame() {
+        requireActivity().supportFragmentManager.popBackStack(
+            GameFragment.NAME,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
-    companion object{
+
+    companion object {
         private const val KEY_GAME_RESULT = "game_result"
-        fun newInstance(gameResult: GameResult): GameFinishedFragment{
+        fun newInstance(gameResult: GameResult): GameFinishedFragment {
             return GameFinishedFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(KEY_GAME_RESULT, gameResult)
